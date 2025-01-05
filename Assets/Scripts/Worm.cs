@@ -2,5 +2,77 @@ using UnityEngine;
 
 public class Worm : Enemies
 {
-    
+    enum State
+    {
+        Walking,
+        Dead
+    }
+    [SerializeField] State state;
+
+    protected override void Start()
+    {
+        base.Start();
+        moveSpeed = 5f;
+    }
+
+    private void Awake()
+    {
+        state = State.Walking;
+        timerGoal = Random.Range(minTimerOffset, maxTimerOffset);
+    }
+
+    protected override void Update()
+    {
+        timer += Time.deltaTime;
+
+        if (timer >= timerGoal)
+        {
+            if (Random.Range(0, 2) == 0)
+            {
+                GetLeftMovementDirection();
+                movingDirection = "Left";
+                timer = 0;
+                timerGoal = Random.Range(minTimerOffset, maxTimerOffset);
+            }
+            else
+            {
+                GetRightMovementDirection();
+                movingDirection = "Right";
+                timer = 0;
+                timerGoal = Random.Range(minTimerOffset, maxTimerOffset);
+            }
+        }
+
+        switch (state)
+        {
+            case State.Walking:
+
+                Move();
+
+                break;
+
+            case State.Dead:
+
+                break;
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Wall"))
+        {
+            currentWall = collision.gameObject.GetComponent<Wall>();
+            gravityDirection = currentWall.GravityDirection;
+            constant.force = gravityDirection;
+
+            if (movingDirection == "Left")
+            {
+                GetLeftMovementDirection();
+            }
+            else
+            {
+                GetRightMovementDirection();
+            }
+        }
+    }
 }
