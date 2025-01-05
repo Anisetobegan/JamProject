@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1912821399800375725}
   - component: {fileID: 2913024396031502182}
   - component: {fileID: 4013666568505247100}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Spider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -61,7 +61,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 112
+  m_Constraints: 120
   m_CollisionDetection: 1
 --- !u!75 &1912821399800375725
 ConstantForce:
@@ -113,6 +113,7 @@ MonoBehaviour:
   rb: {fileID: 9105291227134447971}
   constant: {fileID: 1912821399800375725}
   currentWall: {fileID: 0}
+  state: 0
 --- !u!1001 &3521200863824309514
 PrefabInstance:
   m_ObjectHideFlags: 0

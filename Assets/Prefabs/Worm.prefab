@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5073421437901709964}
   - component: {fileID: 1985415407794028575}
   - component: {fileID: 7792730818424183861}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Worm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -84,7 +84,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 112
+  m_Constraints: 120
   m_CollisionDetection: 1
 --- !u!75 &1985415407794028575
 ConstantForce:
@@ -113,6 +113,7 @@ MonoBehaviour:
   rb: {fileID: 5073421437901709964}
   constant: {fileID: 1985415407794028575}
   currentWall: {fileID: 0}
+  state: 0
 --- !u!1 &6090156324029440822
 GameObject:
   m_ObjectHideFlags: 0
