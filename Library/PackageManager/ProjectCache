@@ -5,16 +5,16 @@ m_ProjectFiles:
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 638715491839396460
-    m_Hash: 4109774681
+      ticks: 638716540540785047
+    m_Hash: 730977024
   m_LockFileStatus:
     m_FilePath: C:/Users/ezequ/Desktop/Projects/Unit/JamProject/Packages/packages-lock.json
     m_PathExists: 1
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 638715491839428554
-    m_Hash: 2227579476
+      ticks: 638716540540820210
+    m_Hash: 3943351210
 m_EmbeddedPackageManifests:
   m_ManifestsStatus: {}
 m_LocalPackages:
@@ -218,6 +218,98 @@ m_ResolvedPackages:
     compatibilityLevel: 0
     minimumPackageVersion: 1.0.0
     minimumUnityVersion: 6000.0.0a1
+- packageId: com.unity.ugui@2.0.0
+  testable: 0
+  isDirectDependency: 1
+  version: 2.0.0
+  source: 2
+  resolvedPath: C:\Users\ezequ\Desktop\Projects\Unit\JamProject\Library\PackageCache\com.unity.ugui
+  assetPath: Packages/com.unity.ugui
+  name: com.unity.ugui
+  displayName: Unity UI
+  author:
+    name: 
+    email: 
+    url: 
+  category: 
+  type: 
+  description: "Unity UI is a set of tools for developing user interfaces for games
+    and applications. It is a GameObject-based UI system that uses Components and
+    the Game View to arrange, position, and style user interfaces. \u200B You cannot
+    use Unity UI to create or change user interfaces in the Unity Editor."
+  errors: []
+  versions:
+    all:
+    - 2.0.0
+    - 3.0.0-exp.1
+    - 3.0.0-exp.3
+    - 3.0.0-exp.4
+    compatible:
+    - 2.0.0
+    - 3.0.0-exp.1
+    - 3.0.0-exp.3
+    - 3.0.0-exp.4
+    recommended: 2.0.0
+    deprecated: []
+  dependencies:
+  - name: com.unity.modules.ui
+    version: 1.0.0
+  - name: com.unity.modules.imgui
+    version: 1.0.0
+  resolvedDependencies:
+  - name: com.unity.modules.ui
+    version: 1.0.0
+  - name: com.unity.modules.imgui
+    version: 1.0.0
+  keywords:
+  - UI
+  - ugui
+  - Unity UI
+  - Canvas
+  - TextMeshPro
+  - TextMesh Pro
+  - Text
+  - TMP
+  - SDF
+  registry:
+    id: main
+    name: 
+    url: https://packages.unity.com
+    scopes: []
+    isDefault: 1
+    capabilities: 7
+    configSource: 0
+  hideInEditor: 1
+  entitlements:
+    licensingModel: 0
+  isAssetStorePackage: 0
+  datePublishedTicks: 0
+  documentationUrl: 
+  hasRepository: 0
+  repository:
+    type: 
+    url: 
+    revision: 
+    path: 
+  unityLifecycle:
+    version: 2.0.0
+    nextVersion: 
+    recommendedVersion: 
+    isDeprecated: 0
+    deprecationMessage: 
+  isDeprecated: 0
+  deprecationMessage: 
+  git:
+    hash: 
+    revision: 
+  upmReserved: 
+  assetStore:
+    productId: 
+  fingerprint: fd5da3b4bec8d043b01c30177bd62059c5fa36d0
+  editorCompatibility:
+    compatibilityLevel: 0
+    minimumPackageVersion: 2.0.0
+    minimumUnityVersion: 2019.2.0a1
 - packageId: com.unity.modules.accessibility@1.0.0
   testable: 0
   isDirectDependency: 1
@@ -2816,12 +2908,21 @@ m_ResolvedPackages:
     email: 
     url: 
   category: Libraries
-  type: 
+  type: assets
   description: A custom version of NUnit used by Unity Test Framework. Based on NUnit
     version 3.5 and works with all platforms, il2cpp and Mono AOT.
   errors: []
   versions:
     all:
+    - 0.1.5-preview
+    - 0.1.6-preview
+    - 0.1.9-preview
+    - 1.0.0
+    - 1.0.5
+    - 1.0.6
+    - 2.0.2
+    - 2.0.3
+    - 2.0.4
     - 2.0.5
     compatible:
     - 2.0.5
@@ -2843,9 +2944,9 @@ m_ResolvedPackages:
     configSource: 0
   hideInEditor: 1
   entitlements:
-    licensingModel: 0
+    licensingModel: 1
   isAssetStorePackage: 0
-  datePublishedTicks: 0
+  datePublishedTicks: 638236642220000000
   documentationUrl: https://docs.unity3d.com/Packages/com.unity.ext.nunit@2.0/manual/index.html
   hasRepository: 1
   repository:
