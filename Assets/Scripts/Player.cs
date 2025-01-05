@@ -5,7 +5,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     string _directionKey;
-    float _moveSpeed = 3f;
+    float _moveSpeed = 5f;
     float _jumpForce = 10f;
     float _minimumJumpForce = 3f;
     bool _isJumping = false;
@@ -161,7 +161,7 @@ public class Player : MonoBehaviour
                 break;
 
             case Wall.Direction.Up:
-                _direction = Direction.Right;
+                _direction = Direction.Left;
                 break;
 
             case Wall.Direction.Down:
@@ -183,7 +183,7 @@ public class Player : MonoBehaviour
                 break;
 
             case Wall.Direction.Up:
-                _direction = Direction.Left;
+                _direction = Direction.Right;
                 break;
 
             case Wall.Direction.Down:
