@@ -261,7 +261,7 @@ public class Player : MonoBehaviour
         {
             if (CalculateDotProduct(collision.gameObject))
             {
-                //Actions.EnemyKilled(collision.gameObject.GetComponent<Enemies>());
+                collision.gameObject.GetComponent<Enemies>().Die();
                 Debug.Log("enemy killed");
             }  
             else

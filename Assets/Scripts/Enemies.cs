@@ -23,6 +23,11 @@ public class Enemies : MonoBehaviour
     }
     protected Direction direction;
 
+    private void OnEnable()
+    {
+
+    }
+
     virtual protected void Start()
     {
         gravityDirection = currentWall.GravityDirection;
@@ -138,5 +143,10 @@ public class Enemies : MonoBehaviour
                 direction = Direction.Right;
                 break;
         }
-    }      
+    }
+
+    virtual public void Die()
+    {
+        Destroy(gameObject);
+    }
 }
