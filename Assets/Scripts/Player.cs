@@ -1,14 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    string _directionKey;
-    float _moveSpeed = 5f;
+    float _moveSpeed = 6f;
     float _jumpForce = 10f;
     float _minimumJumpForce = 3f;
     bool _isJumping = false;
+    bool _isVertical = false;
 
     //Vectors
     Vector3 _gravityDirection;
@@ -41,21 +42,26 @@ public class Player : MonoBehaviour
         _gravityDirection = _currentWall.GravityDirection;
         _constant.force = _gravityDirection;
         _direction = Direction.Right;
-        _directionKey = "D";
         _state = State.Running;        
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.A))
+        if (Input.GetKeyDown(KeyCode.A) && !_isVertical)
         {
-            _directionKey = "A";
-            GetLeftMovementDirection();
+            _direction = Direction.Left;
         }
-        if (Input.GetKeyDown(KeyCode.D))
+        if (Input.GetKeyDown(KeyCode.D) && !_isVertical)
         {
-            _directionKey = "D";
-            GetRightMovementDirection();
+            _direction = Direction.Right;
+        }
+        if (Input.GetKeyDown(KeyCode.W) && _isVertical)
+        {
+            _direction = Direction.Up;
+        }
+        if (Input.GetKeyDown(KeyCode.S) && _isVertical)
+        {
+            _direction = Direction.Down;
         }
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -148,47 +154,37 @@ public class Player : MonoBehaviour
         _isJumping = true;
     }
 
-    void GetLeftMovementDirection()
+    bool CalculateDotProduct(GameObject target)
     {
-        switch (_currentWall.direction)
-        {
-            case Wall.Direction.Left:
-                _direction = Direction.Up;
-                break;
+        Vector3 targetDirection = (target.transform.position - transform.position).normalized;
+        float dotProduct = Vector3.Dot(_gravityDirection.normalized, targetDirection);        
 
-            case Wall.Direction.Right:
-                _direction = Direction.Down;
-                break;
-
-            case Wall.Direction.Up:
-                _direction = Direction.Left;
-                break;
-
-            case Wall.Direction.Down:
-                _direction = Direction.Left;
-                break;
-        }
+        return dotProduct > 0.5;
     }
 
-    void GetRightMovementDirection()
+    bool LineLineIntersection(out Vector3 intersection, Vector3 linePoint1,
+        Vector3 lineVec1, Vector3 linePoint2, Vector3 lineVec2)
     {
-        switch (_currentWall.direction)
+
+        Vector3 lineVec3 = linePoint2 - linePoint1;
+        Vector3 crossVec1and2 = Vector3.Cross(lineVec1, lineVec2);
+        Vector3 crossVec3and2 = Vector3.Cross(lineVec3, lineVec2);
+
+        float planarFactor = Vector3.Dot(lineVec3, crossVec1and2);
+
+        //is coplanar, and not parallel
+        if (Mathf.Abs(planarFactor) < 0.0001f
+                && crossVec1and2.sqrMagnitude > 0.0001f)
         {
-            case Wall.Direction.Left:
-                _direction = Direction.Down;
-                break;
-
-            case Wall.Direction.Right:
-                _direction = Direction.Up;
-                break;
-
-            case Wall.Direction.Up:
-                _direction = Direction.Right;
-                break;
-
-            case Wall.Direction.Down:
-                _direction = Direction.Right;
-                break;
+            float s = Vector3.Dot(crossVec3and2, crossVec1and2)
+                    / crossVec1and2.sqrMagnitude;
+            intersection = linePoint1 + (lineVec1 * s);
+            return true;
+        }
+        else
+        {
+            intersection = Vector3.zero;
+            return false;
         }
     }
 
@@ -198,34 +194,74 @@ public class Player : MonoBehaviour
         {
             if (_isJumping)
             {
+                Wall lastWall = _currentWall;
                 _currentWall = collision.gameObject.GetComponent<Wall>();
                 _gravityDirection = _currentWall.GravityDirection;
                 _isJumping = false;
                 _state = State.Running;
                 _constant.force = _gravityDirection;
 
-                if (_directionKey == "A")
+                if (_isVertical && lastWall != _currentWall)
                 {
-                    GetLeftMovementDirection();
+                    if (lastWall.direction == Wall.Direction.Left)
+                    {
+                        _isVertical = false;
+                        _direction = Direction.Right;
+                    }
+                    else
+                    {
+                        _isVertical = false;
+                        _direction = Direction.Left;
+                    }
                 }
-                else
+                else if (!_isVertical && lastWall != _currentWall)
                 {
-                    GetRightMovementDirection();
+                    _isVertical = true;
+
+                    if (lastWall.direction == Wall.Direction.Up)
+                    {
+                        _direction = Direction.Down;
+                    }
+                    else
+                    {
+                        _direction = Direction.Up;
+                    }
                 }
             }
             else
             {
                 if (collision.gameObject.GetComponent<Wall>() != _currentWall)
                 {
-                    if (_directionKey == "A")
+                    switch (_direction)
                     {
-                        GetRightMovementDirection();
-                    }
-                    else
-                    {
-                        GetLeftMovementDirection();
+                        case Direction.Left:
+                            _direction = Direction.Right;
+                            break;
+                        case Direction.Up:
+                            _direction = Direction.Down;
+                            break;
+                        case Direction.Down:
+                            _direction = Direction.Up;
+                            break;
+                        case Direction.Right:
+                            _direction = Direction.Left;
+                            break;
                     }
                 }
+            }
+        }
+
+        else if(collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        {
+            if (CalculateDotProduct(collision.gameObject))
+            {
+                //Actions.EnemyKilled(collision.gameObject.GetComponent<Enemies>());
+                Debug.Log("enemy killed");
+            }  
+            else
+            {
+                Debug.Log("you are dead");
+                _state = State.Dead;
             }
         }
     }
