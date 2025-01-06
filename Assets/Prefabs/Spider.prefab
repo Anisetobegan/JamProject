@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 8001923502515165110}
   - component: {fileID: 9105291227134447971}
   - component: {fileID: 1912821399800375725}
-  - component: {fileID: 2913024396031502182}
   - component: {fileID: 4013666568505247100}
+  - component: {fileID: 4614034186779383807}
   m_Layer: 6
   m_Name: Spider
   m_TagString: Untagged
@@ -52,13 +52,13 @@ Rigidbody:
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 136
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 120
@@ -75,29 +75,6 @@ ConstantForce:
   m_RelativeForce: {x: 0, y: 0, z: 0}
   m_Torque: {x: 0, y: 0, z: 0}
   m_RelativeTorque: {x: 0, y: 0, z: 0}
---- !u!136 &2913024396031502182
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7089335889085179870}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.53
-  m_Height: 1.06
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.35410964, z: 0}
 --- !u!114 &4013666568505247100
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114,6 +91,27 @@ MonoBehaviour:
   constant: {fileID: 1912821399800375725}
   currentWall: {fileID: 0}
   state: 0
+--- !u!65 &4614034186779383807
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7089335889085179870}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.2584769, y: 0.76993847, z: 1}
+  m_Center: {x: 0.0061896443, y: 0.38244438, z: 0}
 --- !u!1001 &3521200863824309514
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -176,6 +174,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 00ebabae601bd5e4c88d882c32731f9c, type: 3}
       propertyPath: m_ConstrainProportionsScale
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -4867850234192946438, guid: 00ebabae601bd5e4c88d882c32731f9c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -380429245002751754, guid: 00ebabae601bd5e4c88d882c32731f9c, type: 3}
+      propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 00ebabae601bd5e4c88d882c32731f9c, type: 3}

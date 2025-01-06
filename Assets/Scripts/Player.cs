@@ -47,21 +47,65 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.A) && !_isVertical)
+        /*if (Input.GetKeyDown(KeyCode.A) && !_isVertical)
         {
             _direction = Direction.Left;
-        }
-        if (Input.GetKeyDown(KeyCode.D) && !_isVertical)
+        }*/
+        if (Input.GetKeyDown(KeyCode.A))
         {
-            _direction = Direction.Right;
+            if (_isVertical) 
+            {
+                if (_currentWall.direction == Wall.Direction.Left && _isJumping)
+                {
+                    _rb.AddForce((_gravityDirection).normalized * (_jumpForce * 2), ForceMode.Impulse);
+                }
+            }
+            else
+            {
+                _direction = Direction.Left;
+            }            
         }
-        if (Input.GetKeyDown(KeyCode.W) && _isVertical)
+        if (Input.GetKeyDown(KeyCode.D))
         {
-            _direction = Direction.Up;
+            if (_isVertical)
+            {
+                if (_currentWall.direction == Wall.Direction.Right && _isJumping)
+                {
+                    _rb.AddForce((_gravityDirection).normalized * (_jumpForce * 2), ForceMode.Impulse);
+                }
+            }
+            else
+            {
+                _direction = Direction.Right;
+            }
         }
-        if (Input.GetKeyDown(KeyCode.S) && _isVertical)
+        if (Input.GetKeyDown(KeyCode.W))
         {
-            _direction = Direction.Down;
+            if (!_isVertical)
+            {
+                if (_currentWall.direction == Wall.Direction.Up && _isJumping)
+                {
+                    _rb.AddForce((_gravityDirection).normalized * (_jumpForce * 2), ForceMode.Impulse);
+                }
+            }
+            else
+            {
+                _direction = Direction.Up;
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            if (!_isVertical)
+            {
+                if (_currentWall.direction == Wall.Direction.Down && _isJumping)
+                {
+                    _rb.AddForce((_gravityDirection).normalized * (_jumpForce * 2), ForceMode.Impulse);
+                }
+            }
+            else
+            {
+                _direction = Direction.Down;
+            }
         }
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -201,37 +245,67 @@ public class Player : MonoBehaviour
                 _state = State.Running;
                 _constant.force = _gravityDirection;
 
-                if (_isVertical && lastWall != _currentWall)
+                //switch to mantain the direction the Player is moving when changing walls
+                switch (_currentWall.direction) 
                 {
-                    if (lastWall.direction == Wall.Direction.Left)
-                    {
-                        _isVertical = false;
-                        _direction = Direction.Right;
-                    }
-                    else
-                    {
-                        _isVertical = false;
-                        _direction = Direction.Left;
-                    }
-                }
-                else if (!_isVertical && lastWall != _currentWall)
-                {
-                    _isVertical = true;
+                    case Wall.Direction.Up:                        
+                        if (lastWall.direction == Wall.Direction.Left)
+                        {
+                            _isVertical = false;
+                            _direction = Direction.Right;
+                        }
+                        else if (lastWall.direction == Wall.Direction.Right)
+                        {
+                            _isVertical = false;
+                            _direction = Direction.Left;
+                        }
+                        break;
 
-                    if (lastWall.direction == Wall.Direction.Up)
-                    {
-                        _direction = Direction.Down;
-                    }
-                    else
-                    {
-                        _direction = Direction.Up;
-                    }
+                    case Wall.Direction.Down:
+                        if (lastWall.direction == Wall.Direction.Left)
+                        {
+                            _isVertical = false;
+                            _direction = Direction.Right;
+                        }
+                        else if (lastWall.direction == Wall.Direction.Right)
+                        {
+                            _isVertical = false;
+                            _direction = Direction.Left;
+                        }
+                        break;
+
+                    case Wall.Direction.Left:
+                        if (lastWall.direction == Wall.Direction.Up)
+                        {
+                            _isVertical = true;
+                            _direction = Direction.Down;
+                        }
+                        else if (lastWall.direction == Wall.Direction.Down)
+                        {
+                            _isVertical = true;
+                            _direction = Direction.Up;
+                        }
+                        break;
+
+                    case Wall.Direction.Right:
+                        if (lastWall.direction == Wall.Direction.Up)
+                        {
+                            _isVertical = true;
+                            _direction = Direction.Down;
+                        }
+                        else if (lastWall.direction == Wall.Direction.Down)
+                        {
+                            _isVertical = true;
+                            _direction = Direction.Up;
+                        }
+                        break;
                 }
             }
             else
             {
                 if (collision.gameObject.GetComponent<Wall>() != _currentWall)
                 {
+                    //inverts the direction when the Player collides with a wall
                     switch (_direction)
                     {
                         case Direction.Left:
@@ -253,13 +327,17 @@ public class Player : MonoBehaviour
 
         else if(collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
+            //checks if the Enemy is below the Player
             if (CalculateDotProduct(collision.gameObject))
             {
+                //if true, kills the Enemy
                 collision.gameObject.GetComponent<Enemies>().Die();
+                Jump();
                 Debug.Log("enemy killed");
             }  
             else
             {
+                //if false, the Enemy klls the Player
                 Debug.Log("you are dead");
                 _state = State.Dead;
             }

@@ -9,6 +9,7 @@ public class Enemies : MonoBehaviour
     protected float maxTimerOffset = 5f;
     protected float timer = 0;
     protected float timerGoal;
+    protected bool canChangeWalls = true;
 
     [SerializeField] protected Rigidbody rb;
     [SerializeField] protected ConstantForce constant;

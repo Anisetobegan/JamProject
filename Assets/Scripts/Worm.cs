@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Worm : Enemies
@@ -11,7 +12,18 @@ public class Worm : Enemies
 
     protected override void Start()
     {
-        base.Start();
+        gravityDirection = currentWall.GravityDirection;
+
+        if (Random.Range(0, 2) == 0)
+        {
+            GetLeftMovementDirection();
+            movingDirection = "Left";
+        }
+        else
+        {
+            GetRightMovementDirection();
+            movingDirection = "Right";
+        }
         moveSpeed = 5f;
     }
 
@@ -59,13 +71,38 @@ public class Worm : Enemies
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Wall"))
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Wall") && canChangeWalls)
         {
-            currentWall = collision.gameObject.GetComponent<Wall>();
+            if (collision.gameObject.GetComponent<Wall>() != currentWall)
+            {
+                /*currentWall = collision.gameObject.GetComponent<Wall>();
+                gravityDirection = currentWall.GravityDirection;*/
+                timer = 0;
+                timerGoal = Random.Range(minTimerOffset, maxTimerOffset);
+
+                if (movingDirection == "Left")
+                {
+                    GetRightMovementDirection();
+                }
+                else
+                {
+                    GetLeftMovementDirection();
+                }
+            }
+        }
+
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Ramp") && canChangeWalls)
+        {
+            timer = 0;
+            timerGoal = Random.Range(minTimerOffset, maxTimerOffset);
+            currentWall = collision.gameObject.GetComponent<Ramp>().GetAdjacentWall(currentWall);
             gravityDirection = currentWall.GravityDirection;
             constant.force = gravityDirection;
+            canChangeWalls = false;
 
-            if (movingDirection == "Left")
+            StartCoroutine(StartWallChangeTimer());
+
+             if (movingDirection == "Left")
             {
                 GetLeftMovementDirection();
             }
@@ -74,5 +111,12 @@ public class Worm : Enemies
                 GetRightMovementDirection();
             }
         }
+    }
+
+    IEnumerator StartWallChangeTimer()
+    {
+        yield return new WaitForSeconds(1f);
+        canChangeWalls = true;
+        constant.force = Vector3.zero;
     }
 }

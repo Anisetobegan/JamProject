@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Spider : Enemies
 {
-    float jumpForce = 7f;
+    float jumpForce = 9f;
     bool isJumping = false;
     float minJumpTimerOffset = 2f;
     float maxJumpTimerOffset = 6f;
@@ -21,7 +21,7 @@ public class Spider : Enemies
     protected override void Start()
     {
         base.Start();
-        moveSpeed = 3f;
+        moveSpeed = 4f;
     }
 
     private void Awake()
@@ -108,10 +108,36 @@ public class Spider : Enemies
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Wall"))
         {
-            currentWall = collision.gameObject.GetComponent<Wall>();
+            if (collision.gameObject.GetComponent<Wall>() != currentWall)
+            {
+                timer = 0;
+                timerGoal = Random.Range(minTimerOffset, maxTimerOffset);
+
+                if (movingDirection == "Left")
+                {
+                    GetRightMovementDirection();
+                }
+                else
+                {
+                    GetLeftMovementDirection();
+                }
+            }
+            else
+            {
+                isJumping = false;
+            }
+        }
+
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Ramp") && canChangeWalls)
+        {
+            timer = 0;
+            timerGoal = Random.Range(minTimerOffset, maxTimerOffset);
+            currentWall = collision.gameObject.GetComponent<Ramp>().GetAdjacentWall(currentWall);
             gravityDirection = currentWall.GravityDirection;
             constant.force = gravityDirection;
-            isJumping = false;
+            canChangeWalls = false;
+
+            StartCoroutine(StartWallChangeTimer());
 
             if (movingDirection == "Left")
             {
@@ -122,5 +148,11 @@ public class Spider : Enemies
                 GetRightMovementDirection();
             }
         }
+    }
+
+    IEnumerator StartWallChangeTimer()
+    {
+        yield return new WaitForSeconds(2f);
+        canChangeWalls = true;
     }
 }
