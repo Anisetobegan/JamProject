@@ -19,8 +19,6 @@ public class Player : MonoBehaviour
     [SerializeField] ConstantForce _constant;
     [SerializeField] Wall _currentWall;
 
-    [SerializeField] Animator animator;
-
     enum Direction
     {
         Left,
@@ -131,7 +129,6 @@ public class Player : MonoBehaviour
                     Jump();
                 }
 
-
                 break;
 
             case State.Hit:
@@ -142,8 +139,6 @@ public class Player : MonoBehaviour
 
                 break;
         }
-        animator.SetBool("Jumping", _isJumping);
-
     }
 
     void Move()
@@ -164,7 +159,6 @@ public class Player : MonoBehaviour
                 MoveDown();
                 break;
         }
-
     }    
 
     void MoveRight()
