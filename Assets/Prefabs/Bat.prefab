@@ -198,6 +198,7 @@ MonoBehaviour:
   rb: {fileID: 3922867447622234521}
   constant: {fileID: 2119327942845123552}
   currentWall: {fileID: 0}
+  deadVFX: {fileID: 234820883687360170, guid: 0865de1e6019efc4aa8f3e44184a96ba, type: 3}
   trigger: {fileID: 5557530946123880629}
   state: 0
 --- !u!135 &5557530946123880629

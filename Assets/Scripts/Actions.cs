@@ -5,5 +5,5 @@ public static class Actions
 {
     public static Action<Enemies> OnEnemyKilled;
 
-    public static Action OnWaveWon;
+    public static Action OnLevelWon;
 }

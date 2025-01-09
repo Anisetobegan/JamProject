@@ -91,6 +91,7 @@ MonoBehaviour:
   rb: {fileID: 5073421437901709964}
   constant: {fileID: 1985415407794028575}
   currentWall: {fileID: 0}
+  deadVFX: {fileID: 234820883687360170, guid: 0865de1e6019efc4aa8f3e44184a96ba, type: 3}
   state: 0
 --- !u!95 &5753780125458930555
 Animator:

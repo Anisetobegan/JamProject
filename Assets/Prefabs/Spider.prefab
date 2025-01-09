@@ -90,6 +90,7 @@ MonoBehaviour:
   rb: {fileID: 9105291227134447971}
   constant: {fileID: 1912821399800375725}
   currentWall: {fileID: 0}
+  deadVFX: {fileID: 234820883687360170, guid: 0865de1e6019efc4aa8f3e44184a96ba, type: 3}
   state: 0
 --- !u!65 &4614034186779383807
 BoxCollider:

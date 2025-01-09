@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Enemies : MonoBehaviour
@@ -10,10 +11,12 @@ public class Enemies : MonoBehaviour
     protected float timer = 0;
     protected float timerGoal;
     protected bool canChangeWalls = true;
+    protected bool isDead = false;
 
     [SerializeField] protected Rigidbody rb;
     [SerializeField] protected ConstantForce constant;
     [SerializeField] protected Wall currentWall;
+    [SerializeField] protected GameObject deadVFX;
 
     protected enum Direction
     {
@@ -23,6 +26,8 @@ public class Enemies : MonoBehaviour
         Down
     }
     protected Direction direction;
+
+    public bool IsDead {  get { return isDead; } }
 
     private void OnEnable()
     {
@@ -146,8 +151,18 @@ public class Enemies : MonoBehaviour
         }
     }
 
+    IEnumerator PLayDeadVFX()
+    {
+        GameObject newDeadVFX = Instantiate(deadVFX, transform.position, transform.rotation);
+        yield return new WaitForSeconds(1f);
+        Destroy(newDeadVFX);
+    }
+
     virtual public void Die()
     {
+        isDead = true;
+        Actions.OnEnemyKilled(this);
+        StartCoroutine(PLayDeadVFX());
         Destroy(gameObject);
     }
 }

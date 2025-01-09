@@ -1,22 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    private int _wave;
-
-    private int _enemiesToAddPerWave = 5;
-
-    private float _timeBetweenWaves = 3;
+    private int _level;
 
     IEnumerator _enumerator = null;
 
     public static bool _isPaused = false;
 
-    [SerializeField] private GameObject _waveScreen;
-    [SerializeField] private GameObject _gameOverScreen;
-    [SerializeField] private GameObject _pauseScreen;
+    [SerializeField] Player _player;
+
+    public Player PlayerGet { get { return _player; } }
+
+    public IEnumerator EnumeratorGet { get { return _enumerator; } }
 
     public static GameManager Instance
     {
@@ -38,7 +37,9 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        _wave = 1;
+        _level = 1;
+
+        UIManager.Instance.OpenLevelStartScreen(_level);
     }
 
     void Update()
@@ -51,58 +52,72 @@ public class GameManager : MonoBehaviour
         {
             Pause();
         }
-
-        /*if (_enemySpawner.EnemiesKilled == _enemySpawner.MaxEnemies) //checks if player killed the amount of max enemies per wave
-        {
-            _enemySpawner.EnemiesKilled = 0;
-
-            _enemySpawner.EnemiesSpawned = 0;
-
-            WaveWon();
-
-            _enumerator = StartNewWave();
-            StartCoroutine(_enumerator);
-        }*/
     }
 
-    public void WaveWon()
+    public void LevelWon()
     {
-        //waveScreen.SetActive(true);
+        _level += 1;
+        
+        LevelManager.Instance.EndLevel();
+        UIManager.Instance.OpenLevelClearScreen();
+        LevelManager.Instance.ChangeLevel(_level);
 
-        //spawner.gameObject.SetActive(false);
-
-        _wave += 1;
+        if (LevelManager.Instance.CurrentLevel != null)
+        {
+            _enumerator = StartNewLevel();
+            StartCoroutine(_enumerator);
+        }
     }
 
     public void Lose()
     {
-        _gameOverScreen.SetActive(true);
+        UIManager.Instance.OpenGameOverScreen();
     }
 
-    public IEnumerator StartNewWave()
+    public IEnumerator StartNewLevel()
     {
-        yield return new WaitForSeconds(_timeBetweenWaves);
+        yield return new WaitForSeconds(3f);
 
-        _waveScreen.SetActive(false);
+        UIManager.Instance.OpenLevelStartScreen(_level);
 
-        //Actions.OnWaveWon?.Invoke();
-
-        //_enemySpawner.MaxEnemies += _enemiesToAddPerWave;
+        LevelManager.Instance.StartLevel();
 
         _enumerator = null;
     }
 
     public void Pause()
     {
-        _pauseScreen.SetActive(true);
+        UIManager.Instance.OpenPauseScreen();
         Time.timeScale = 0f;
         _isPaused = true;
     }
 
     public void Resume()
     {
-        _pauseScreen.SetActive(false);
+        UIManager.Instance.ClosePauseScreen();
         Time.timeScale = 1f;
         _isPaused = false;
+    }
+
+    public void Retry()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        Time.timeScale = 1;
+    }
+
+    public void ReturnToMainMenu()
+    {
+        SceneManager.LoadScene(0);
+        Time.timeScale = 1;
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
+    public void GameWon()
+    {
+        UIManager.Instance.OpenGameWonScreen();
     }
 }

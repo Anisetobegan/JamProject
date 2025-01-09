@@ -122,4 +122,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ea2f8988463ca14a83f38cf2068399e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gravityDirection: {x: 0, y: 0, z: 0}
+  wallCollider: {fileID: 6644742526253286508}
   direction: 0

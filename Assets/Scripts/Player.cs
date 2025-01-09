@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -21,6 +22,8 @@ public class Player : MonoBehaviour
 
     [SerializeField] Animator animator;
 
+    [SerializeField] GameObject _deadVFX;
+
     enum Direction
     {
         Left,
@@ -34,10 +37,10 @@ public class Player : MonoBehaviour
     {
         Running,
         Jumping,
-        Hit,
+        Transitioning,
         Dead
     }
-    State _state;
+    [SerializeField] State _state;
 
     void Start()
     {
@@ -131,14 +134,22 @@ public class Player : MonoBehaviour
                     Jump();
                 }
 
-
                 break;
 
-            case State.Hit:
+            case State.Transitioning:
 
+                if (GameManager.Instance.EnumeratorGet == null)
+                {
+                    _rb.isKinematic = false;
+                    _state = State.Running;
+                }
                 break;
 
             case State.Dead:
+
+                PlayDeadVFX();
+                GameManager.Instance.Lose();
+                gameObject.SetActive(false);
 
                 break;
         }
@@ -238,12 +249,36 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void AssignCurrentWall(Wall wallToAsign)
+    {
+        _currentWall = wallToAsign;
+    }
+
+    public void PlayerTransition(Vector3 pos, Level levelToDestroy)
+    {
+        _state = State.Transitioning;
+        _constant.force = Vector3.zero;
+        _rb.linearVelocity = Vector3.zero;
+        _rb.linearVelocity = Vector3.zero;
+        _rb.angularVelocity = Vector3.zero;
+        _rb.isKinematic = true;
+        _rb.DOMove(pos, 3f).SetEase(Ease.InOutSine).OnComplete(() => levelToDestroy.DestroyCompletedLevel());
+    }
+
+    void PlayDeadVFX()
+    {
+        Instantiate(_deadVFX, transform.position, Quaternion.identity);
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Wall"))
         {
             if (_isJumping)
             {
+                ContactPoint contactPoint = collision.GetContact(0);
+                transform.position = contactPoint.point;
+
                 Wall lastWall = _currentWall;
                 _currentWall = collision.gameObject.GetComponent<Wall>();
                 _gravityDirection = _currentWall.GravityDirection;
