@@ -98,6 +98,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0fd62acffbae324dba40358972fa670, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _jumpForce: 6
+  _minimumJumpForce: 2
   _rb: {fileID: 5076886873066754329}
   _constant: {fileID: 1158264560748205090}
   _currentWall: {fileID: 0}
