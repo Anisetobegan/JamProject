@@ -90,9 +90,14 @@ public class LevelManager : MonoBehaviour
         if (levels.Count >= level)
         {
             Vector3 levelPos = currentLevel.transform.position;
-            levelPos.x += 40f;
+            float offset = (currentLevel.EndChain.position - currentLevel.transform.position).magnitude;
+            levelPos.x += offset;
 
             newLevel = Instantiate(levels[level - 1], levelPos, transform.rotation);
+            offset = (newLevel.StartChain.position - newLevel.transform.position).magnitude;
+            levelPos.x += offset;
+            newLevel.transform.position = levelPos;
+
             newLevel.DisableWallsColliders();
             newLevel.DisableEnemies();
             return newLevel;

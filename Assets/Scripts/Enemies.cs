@@ -151,18 +151,15 @@ public class Enemies : MonoBehaviour
         }
     }
 
-    IEnumerator PLayDeadVFX()
-    {
-        GameObject newDeadVFX = Instantiate(deadVFX, transform.position, transform.rotation);
-        yield return new WaitForSeconds(1f);
-        Destroy(newDeadVFX);
-    }
-
     virtual public void Die()
     {
-        isDead = true;
-        Actions.OnEnemyKilled(this);
-        StartCoroutine(PLayDeadVFX());
-        Destroy(gameObject);
+        if (!IsDead)
+        {
+            isDead = true;
+            Actions.OnEnemyKilled(this);
+            GameObject newDeadVFX = Instantiate(deadVFX, transform.position, transform.rotation);
+            Destroy(newDeadVFX, 1f);
+            Destroy(gameObject);
+        }
     }
 }

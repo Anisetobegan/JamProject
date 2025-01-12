@@ -376,7 +376,8 @@ MonoBehaviour:
   - {fileID: 7895374847168493307}
   - {fileID: 9124053859135936713}
   playerStartingPos: {fileID: 5024778478225476236}
-  shouldMoveCamera: 0
+  startChain: {fileID: 4297242217674421120}
+  endChain: {fileID: 3295265619802750938}
 --- !u!1 &4646110245461215319
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,9 +9,13 @@ public class Level : MonoBehaviour
     [SerializeField] List<Enemies> enemiesAlive;
     [SerializeField] List<Wall> walls;
     [SerializeField] Transform playerStartingPos;
+    [SerializeField] Transform startChain;
+    [SerializeField] Transform endChain;
 
     public Wall StartingWall { get { return walls[0]; } }
     public Transform PlayerStartingPosition { get { return playerStartingPos; } }
+    public Transform StartChain { get { return startChain; } }
+    public Transform EndChain { get { return endChain; } }
 
     private void OnEnable()
     {
