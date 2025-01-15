@@ -52,7 +52,7 @@ Rigidbody:
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 136
+    m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 64
@@ -91,6 +91,7 @@ MonoBehaviour:
   constant: {fileID: 1912821399800375725}
   currentWall: {fileID: 0}
   deadVFX: {fileID: 234820883687360170, guid: 0865de1e6019efc4aa8f3e44184a96ba, type: 3}
+  isJumping: 0
   state: 0
 --- !u!65 &4614034186779383807
 BoxCollider:
@@ -112,7 +113,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1.2584769, y: 0.76993847, z: 1}
-  m_Center: {x: 0.0061896443, y: 0.38244438, z: 0}
+  m_Center: {x: 0, y: 0.38244438, z: 0}
 --- !u!1001 &3521200863824309514
 PrefabInstance:
   m_ObjectHideFlags: 0

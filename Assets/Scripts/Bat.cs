@@ -22,13 +22,13 @@ public class Bat : Enemies
 
         if (Random.Range(0, 2) == 0)
         {
-            GetLeftMovementDirection();
-            movingDirection = "Left";
+            //GetLeftMovementDirection();
+            direction = Direction.Left;
         }
         else
         {
-            GetRightMovementDirection();
-            movingDirection = "Right";
+            //GetRightMovementDirection();
+            direction = Direction.Right;
         }
         moveSpeed = 3f;
     }
@@ -49,14 +49,14 @@ public class Bat : Enemies
             if (Random.Range(0, 2) == 0)
             {
                 GetLeftMovementDirection();
-                movingDirection = "Left";
+                direction = Direction.Left;
                 timer = 0;
                 timerGoal = Random.Range(minTimerOffset, maxTimerOffset);
             }
             else
             {
                 GetRightMovementDirection();
-                movingDirection = "Right";
+                direction = Direction.Right;
                 timer = 0;
                 timerGoal = Random.Range(minTimerOffset, maxTimerOffset);
             }
@@ -85,7 +85,7 @@ public class Bat : Enemies
                 currentWall = other.gameObject.GetComponent<Wall>();
                 gravityDirection = currentWall.GravityDirection;
                 
-                if (movingDirection == "Left")
+                if (direction == Direction.Left)
                 {
                     GetLeftMovementDirection();
                 }

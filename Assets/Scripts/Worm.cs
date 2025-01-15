@@ -16,13 +16,13 @@ public class Worm : Enemies
 
         if (Random.Range(0, 2) == 0)
         {
-            GetLeftMovementDirection();
-            movingDirection = "Left";
+            //GetLeftMovementDirection();
+            direction = Direction.Left;
         }
         else
         {
-            GetRightMovementDirection();
-            movingDirection = "Right";
+            //GetRightMovementDirection();
+            direction = Direction.Right;
         }
         moveSpeed = 5f;
     }
@@ -42,14 +42,14 @@ public class Worm : Enemies
             if (Random.Range(0, 2) == 0)
             {
                 GetLeftMovementDirection();
-                movingDirection = "Left";
+                direction = Direction.Left;
                 timer = 0;
                 timerGoal = Random.Range(minTimerOffset, maxTimerOffset);
             }
             else
             {
                 GetRightMovementDirection();
-                movingDirection = "Right";
+                direction = Direction.Right;
                 timer = 0;
                 timerGoal = Random.Range(minTimerOffset, maxTimerOffset);
             }
@@ -80,7 +80,7 @@ public class Worm : Enemies
                 timer = 0;
                 timerGoal = Random.Range(minTimerOffset, maxTimerOffset);
 
-                if (movingDirection == "Left")
+                if (direction == Direction.Left)
                 {
                     GetRightMovementDirection();
                 }
@@ -102,7 +102,7 @@ public class Worm : Enemies
 
             StartCoroutine(StartWallChangeTimer());
 
-             if (movingDirection == "Left")
+             if (direction == Direction.Left)
             {
                 GetLeftMovementDirection();
             }

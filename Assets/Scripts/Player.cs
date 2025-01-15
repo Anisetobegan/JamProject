@@ -46,7 +46,7 @@ public class Player : MonoBehaviour
     {
         _gravityDirection = _currentWall.GravityDirection;
         _constant.force = _gravityDirection;
-        _direction = Direction.Right;
+        _direction = Direction.Left;
         _state = State.Running;        
     }
 
@@ -289,7 +289,7 @@ public class Player : MonoBehaviour
                 //switch to mantain the direction the Player is moving when changing walls
                 switch (_currentWall.direction) 
                 {
-                    case Wall.Direction.Up:                        
+                    case Wall.Direction.Up:
                         if (lastWall.direction == Wall.Direction.Left)
                         {
                             _isVertical = false;

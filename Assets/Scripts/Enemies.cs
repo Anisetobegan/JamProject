@@ -1,11 +1,12 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Enemies : MonoBehaviour
 {
     protected float moveSpeed;
+    protected float moveDirection;
     protected Vector3 gravityDirection;
-    protected string movingDirection;
     protected float minTimerOffset = 2f;
     protected float maxTimerOffset = 5f;
     protected float timer = 0;
@@ -21,9 +22,7 @@ public class Enemies : MonoBehaviour
     protected enum Direction
     {
         Left,
-        Right,
-        Up,
-        Down
+        Right
     }
     protected Direction direction;
 
@@ -39,16 +38,12 @@ public class Enemies : MonoBehaviour
         gravityDirection = currentWall.GravityDirection;
         constant.force = gravityDirection;
 
-        if (Random.Range(0, 2) == 0)
-        {
-            GetLeftMovementDirection();
-            movingDirection = "Left";
-        }
-        else 
-        {  
-            GetRightMovementDirection();
-            movingDirection = "Right";
-        }
+        
+            //GetLeftMovementDirection();
+            direction = Direction.Left;
+            moveDirection = transform.rotation.eulerAngles.y;
+            //transform.rotation = Quaternion.LookRotation(currentWall.transform.right * -1, gravityDirection * -1);
+            Debug.Log(transform.forward);
     }
 
     virtual protected void Update()
@@ -58,7 +53,7 @@ public class Enemies : MonoBehaviour
 
     virtual protected void Move()
     {
-        switch (direction)
+        /*switch (direction)
         {
             case Direction.Right:
                 MoveRight();
@@ -74,6 +69,35 @@ public class Enemies : MonoBehaviour
                 MoveDown();
                 break;
         }
+
+        if (direction == Direction.Left)
+        {
+            moveDirection = transform.forward;
+            transform.rotation = currentWall.transform.rotation;
+            rb.position = (moveDirection * moveSpeed) * Time.deltaTime + rb.position;
+            transform.rotation = Quaternion.LookRotation(moveDirection, gravityDirection * -1);
+        }
+        else
+        {
+            moveDirection = transform.forward;
+            transform.rotation = currentWall.transform.rotation;
+            rb.position = (moveDirection * moveSpeed) * Time.deltaTime + rb.position;            
+            transform.rotation = Quaternion.LookRotation(moveDirection, gravityDirection * -1);
+        }*/
+
+        //transform.up = currentWall.transform.up;
+        
+        rb.position = (transform.forward * moveSpeed) * Time.deltaTime + rb.position;
+        //transform.rotation = Quaternion.LookRotation(moveDirection, gravityDirection * -1);
+        //moveDirection = transform.forward;
+    }
+
+    protected void ChangeDirection()
+    {
+        //transform.forward *= -1;
+        //transform.rotation = Quaternion.FromToRotation(transform.forward, transform.forward * -1);
+        moveDirection *= -1;
+        transform.Rotate(0, moveDirection * 2, 0, Space.Self);
     }
 
     protected void MoveRight()
@@ -107,9 +131,12 @@ public class Enemies : MonoBehaviour
         transform.rotation = Quaternion.LookRotation(moveDirection, gravityDirection * -1);
     }
 
-    protected void GetLeftMovementDirection()
+    protected Vector3 GetLeftMovementDirection()
     {
-        switch (currentWall.direction)
+        direction = Direction.Left;
+        return currentWall.transform.right * -1;
+
+        /*switch (currentWall.direction)
         {
             case Wall.Direction.Left:
                 direction = Direction.Up;
@@ -126,12 +153,15 @@ public class Enemies : MonoBehaviour
             case Wall.Direction.Down:
                 direction = Direction.Left;
                 break;
-        }
+        }*/
     }
 
-    protected void GetRightMovementDirection()
+    protected Vector3 GetRightMovementDirection()
     {
-        switch (currentWall.direction)
+        direction = Direction.Right;
+        return currentWall.transform.right;
+
+        /*switch (currentWall.direction)
         {
             case Wall.Direction.Left:
                 direction = Direction.Down;
@@ -148,7 +178,7 @@ public class Enemies : MonoBehaviour
             case Wall.Direction.Down:
                 direction = Direction.Right;
                 break;
-        }
+        }*/
     }
 
     virtual public void Die()
