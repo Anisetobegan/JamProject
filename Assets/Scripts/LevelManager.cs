@@ -58,12 +58,12 @@ public class LevelManager : MonoBehaviour
 
         if (nextLevel != null)
         {
-            GameManager.Instance.PlayerGet.PlayerTransition(currentLevel.PlayerStartingPosition.position, completedLevel);
+            GameManager.Instance.PlayerGet.PlayerTransition(currentLevel.PlayerStartingPosition, completedLevel);
             GameManager.Instance.PlayerGet.AssignCurrentWall(currentLevel.StartingWall);
         }
         else if (currentLevel != null)
         {
-            GameManager.Instance.PlayerGet.PlayerTransition(currentLevel.PlayerStartingPosition.position, completedLevel);
+            GameManager.Instance.PlayerGet.PlayerTransition(currentLevel.PlayerStartingPosition, completedLevel);
             GameManager.Instance.PlayerGet.AssignCurrentWall(currentLevel.StartingWall);
         }
         else

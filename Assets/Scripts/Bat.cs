@@ -1,12 +1,9 @@
 using DG.Tweening;
 using UnityEngine;
+using System.Collections;
 
 public class Bat : Enemies
 {
-    float sinCenter;
-    float sinAmplitude;
-    float sinSpeed;
-
     [SerializeField] Collider trigger;
 
     enum State
@@ -19,49 +16,16 @@ public class Bat : Enemies
     protected override void Start()
     {
         gravityDirection = currentWall.GravityDirection;
-
-        if (Random.Range(0, 2) == 0)
-        {
-            //GetLeftMovementDirection();
-            direction = Direction.Left;
-        }
-        else
-        {
-            //GetRightMovementDirection();
-            direction = Direction.Right;
-        }
-        moveSpeed = 3f;
     }
 
     private void Awake()
     {
+        moveSpeed = 3f;
         state = State.Flying;
-        timerGoal = Random.Range(minTimerOffset, maxTimerOffset);
-        sinCenter = transform.position.y;
     }
 
     protected override void Update()
     {
-        timer += Time.deltaTime;
-
-        if (timer >= timerGoal)
-        {
-            if (Random.Range(0, 2) == 0)
-            {
-                GetLeftMovementDirection();
-                direction = Direction.Left;
-                timer = 0;
-                timerGoal = Random.Range(minTimerOffset, maxTimerOffset);
-            }
-            else
-            {
-                GetRightMovementDirection();
-                direction = Direction.Right;
-                timer = 0;
-                timerGoal = Random.Range(minTimerOffset, maxTimerOffset);
-            }
-        }
-
         switch (state)
         {
             case State.Flying:
@@ -76,24 +40,52 @@ public class Bat : Enemies
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Wall"))
+        {
+            if (collision.gameObject.GetComponent<Wall>() != currentWall)
+            {
+                ChangeDirection();
+            }
+        }
+    }
+
+        private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Wall"))
         {
-            if (other.gameObject.GetComponent<Wall>() != currentWall)
+            if (other.gameObject.GetComponent<Wall>() != currentWall && canChangeWalls)
             {
+                rb.Sleep();
+
+                Vector3 lastForwardDirection = transform.forward;
+
                 currentWall = other.gameObject.GetComponent<Wall>();
                 gravityDirection = currentWall.GravityDirection;
-                
-                if (direction == Direction.Left)
+
+                float signedAngle = Vector3.SignedAngle(transform.up, currentWall.GravityDirection.normalized * -1, Vector3.forward);
+
+                if (signedAngle != 0)
                 {
-                    GetLeftMovementDirection();
+                    Quaternion rot = Quaternion.AngleAxis(signedAngle, Vector3.forward) * transform.rotation;
+                    transform.rotation = rot;
+
+                    float dot = Vector3.Dot(lastForwardDirection, transform.forward);
+
+                    if (dot <= -0.999f)
+                    {
+                        ChangeDirection();
+                    }
                 }
-                else
-                {
-                    GetRightMovementDirection();
-                }
+                StartCoroutine(StartWallChangeTimer());
             }            
         }
+    }
+
+    IEnumerator StartWallChangeTimer()
+    {
+        yield return new WaitForSeconds(1f);
+        canChangeWalls = true;
     }
 }

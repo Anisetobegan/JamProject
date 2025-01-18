@@ -10,51 +10,14 @@ public class Worm : Enemies
     }
     [SerializeField] State state;
 
-    protected override void Start()
-    {
-        gravityDirection = currentWall.GravityDirection;
-
-        if (Random.Range(0, 2) == 0)
-        {
-            //GetLeftMovementDirection();
-            direction = Direction.Left;
-        }
-        else
-        {
-            //GetRightMovementDirection();
-            direction = Direction.Right;
-        }
-        moveSpeed = 5f;
-    }
-
     private void Awake()
     {
+        moveSpeed = 5f;
         state = State.Walking;
-        timerGoal = Random.Range(minTimerOffset, maxTimerOffset);
     }
 
     protected override void Update()
     {
-        timer += Time.deltaTime;
-
-        if (timer >= timerGoal)
-        {
-            if (Random.Range(0, 2) == 0)
-            {
-                GetLeftMovementDirection();
-                direction = Direction.Left;
-                timer = 0;
-                timerGoal = Random.Range(minTimerOffset, maxTimerOffset);
-            }
-            else
-            {
-                GetRightMovementDirection();
-                direction = Direction.Right;
-                timer = 0;
-                timerGoal = Random.Range(minTimerOffset, maxTimerOffset);
-            }
-        }
-
         switch (state)
         {
             case State.Walking:
@@ -71,51 +34,38 @@ public class Worm : Enemies
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Wall") && canChangeWalls)
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Wall"))
         {
             if (collision.gameObject.GetComponent<Wall>() != currentWall)
             {
-                /*currentWall = collision.gameObject.GetComponent<Wall>();
-                gravityDirection = currentWall.GravityDirection;*/
-                timer = 0;
-                timerGoal = Random.Range(minTimerOffset, maxTimerOffset);
-
-                if (direction == Direction.Left)
-                {
-                    GetRightMovementDirection();
-                }
-                else
-                {
-                    GetLeftMovementDirection();
-                }
+                ChangeDirection();
             }
         }
 
         if (collision.gameObject.layer == LayerMask.NameToLayer("Ramp") && canChangeWalls)
         {
-            timer = 0;
-            timerGoal = Random.Range(minTimerOffset, maxTimerOffset);
+            canChangeWalls = false;
+            rb.isKinematic = false;
             currentWall = collision.gameObject.GetComponent<Ramp>().GetAdjacentWall(currentWall);
             gravityDirection = currentWall.GravityDirection;
             constant.force = gravityDirection;
-            canChangeWalls = false;
+
+            float signedAngle = Vector3.SignedAngle(transform.up, currentWall.GravityDirection.normalized * -1, Vector3.forward);
+
+            if (signedAngle != 0)
+            {
+                Quaternion rot = Quaternion.AngleAxis(signedAngle, Vector3.forward) * transform.rotation;
+                transform.rotation = rot;
+            }
 
             StartCoroutine(StartWallChangeTimer());
-
-             if (direction == Direction.Left)
-            {
-                GetLeftMovementDirection();
-            }
-            else
-            {
-                GetRightMovementDirection();
-            }
         }
     }
 
     IEnumerator StartWallChangeTimer()
     {
         yield return new WaitForSeconds(1f);
+        rb.isKinematic = true;
         canChangeWalls = true;
         constant.force = Vector3.zero;
     }

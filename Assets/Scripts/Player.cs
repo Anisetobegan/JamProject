@@ -44,9 +44,11 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+        transform.position = LevelManager.Instance.CurrentLevel.PlayerStartingPosition.position;
+        transform.rotation = LevelManager.Instance.CurrentLevel.PlayerStartingPosition.rotation;
         _gravityDirection = _currentWall.GravityDirection;
         _constant.force = _gravityDirection;
-        _direction = Direction.Left;
+        _direction = Direction.Right;
         _state = State.Running;        
     }
 
@@ -254,7 +256,7 @@ public class Player : MonoBehaviour
         _currentWall = wallToAsign;
     }
 
-    public void PlayerTransition(Vector3 pos, Level levelToDestroy)
+    public void PlayerTransition(Transform startingPos, Level levelToDestroy)
     {
         _state = State.Transitioning;
         _constant.force = Vector3.zero;
@@ -262,7 +264,8 @@ public class Player : MonoBehaviour
         _rb.linearVelocity = Vector3.zero;
         _rb.angularVelocity = Vector3.zero;
         _rb.isKinematic = true;
-        _rb.DOMove(pos, 3f).SetEase(Ease.InOutSine).OnComplete(() => levelToDestroy.DestroyCompletedLevel());
+        transform.DOMove(startingPos.position, 3f).SetEase(Ease.InOutSine).OnComplete(() => levelToDestroy.DestroyCompletedLevel());
+        transform.DORotate(startingPos.rotation.eulerAngles, 3f);
     }
 
     void PlayDeadVFX()
@@ -276,6 +279,8 @@ public class Player : MonoBehaviour
         {
             if (_isJumping)
             {
+                _rb.Sleep();
+
                 ContactPoint contactPoint = collision.GetContact(0);
                 transform.position = contactPoint.point;
 
@@ -372,6 +377,7 @@ public class Player : MonoBehaviour
             if (CalculateDotProduct(collision.gameObject))
             {
                 //if true, kills the Enemy
+                _rb.Sleep();
                 collision.gameObject.GetComponent<Enemies>().Die();
                 Jump();
                 Debug.Log("enemy killed");

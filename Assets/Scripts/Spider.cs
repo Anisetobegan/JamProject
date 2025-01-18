@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using Unity.Burst.CompilerServices;
 using UnityEngine;
 
@@ -18,41 +19,14 @@ public class Spider : Enemies
 
     IEnumerator enumerator = null;
 
-    protected override void Start()
-    {
-        base.Start();
-        moveSpeed = 4f;
-    }
-
     private void Awake()
     {
+        moveSpeed = 4f;
         state = State.Walking;
-        timerGoal = Random.Range(minTimerOffset, maxTimerOffset);
     }
 
     protected override void Update()
     {
-        /*timer += Time.deltaTime;
-
-        if (timer >= timerGoal)
-        {
-            ChangeDirection();
-            timer = 0;
-            timerGoal = Random.Range(minTimerOffset, maxTimerOffset);
-            if (Random.Range(0, 2) == 0)
-            {
-                direction = Direction.Left;
-                timer = 0;
-                timerGoal = Random.Range(minTimerOffset, maxTimerOffset);
-            }
-            else
-            {
-                direction = Direction.Right;
-                timer = 0;
-                timerGoal = Random.Range(minTimerOffset, maxTimerOffset);
-            }
-        }*/
-
         switch (state)
         {
             case State.Walking:
@@ -109,37 +83,27 @@ public class Spider : Enemies
         {
             if (isJumping)
             {
-                /*timer = 0;
-                timerGoal = Random.Range(minTimerOffset, maxTimerOffset);*/
-                //Debug.Log("Before: " + transform.eulerAngles);
+                rb.Sleep();
 
                 Vector3 lastForwardDirection = transform.forward;
 
                 Vector3 newPos = collision.GetContact(0).point;
                 newPos.z = 0;
-                //transform.position = newPos;
 
                 float currentYRotation = transform.rotation.eulerAngles.y;
 
-                //currentWall = collision.gameObject.GetComponent<Wall>();
                 currentWall = CheckContactsForCurrentWall(collision.contacts);
                 gravityDirection = currentWall.GravityDirection;
                 isJumping = false;
                 constant.force = gravityDirection;
-                //transform.localRotation = Quaternion.Euler(Vector3.SignedAngle(transform.up, currentWall.GravityDirection.normalized * -1, Vector3.right), transform.localRotation.y, 0);
                 float signedAngle = Vector3.SignedAngle(transform.up, currentWall.GravityDirection.normalized * -1, Vector3.forward);
-                Debug.Log(signedAngle);
-                //transform.Rotate(signedAngle, 0f, 0f, Space.Self);
 
-                if (signedAngle > 0)
+                if (signedAngle != 0)
                 {
                     Quaternion rot = Quaternion.AngleAxis(signedAngle, Vector3.forward) * transform.rotation;
-                    //Debug.Log(rot.eulerAngles);
-                    //Vector3 rot = new Vector3(signedAngle, transform.rotation.eulerAngles.y, 0);
                     transform.rotation = rot;
 
                     float dot = Vector3.Dot(lastForwardDirection, transform.forward);
-
 
                     if (dot <= -0.999f)
                     {
@@ -147,60 +111,37 @@ public class Spider : Enemies
                     }
 
                     transform.position = newPos;
-                    
-                    //Debug.Log("After: " + transform.eulerAngles);
                 }
-
-                
-
-                /*if (movingDirection == "Left")
-                {
-                    GetLeftMovementDirection();
-                }
-                else
-                {
-                    GetRightMovementDirection();
-                }*/
             }
             else
             {
                 if (collision.gameObject.GetComponent<Wall>() != currentWall)
                 {
-                    //timer = 0;
-                    //timerGoal = Random.Range(minTimerOffset, maxTimerOffset);
-
                     ChangeDirection();
-                    /*if (direction == Direction.Left)
-                    {
-                        direction = Direction.Right;
-                    }
-                    else
-                    {
-                        direction = Direction.Left;
-                    }*/
                 }
             }
         }
 
         if (collision.gameObject.layer == LayerMask.NameToLayer("Ramp") && canChangeWalls)
         {
-            timer = 0;
-            timerGoal = Random.Range(minTimerOffset, maxTimerOffset);
+            rb.Sleep();
+
+            Vector3 lastForwardDirection = transform.forward;
+
             currentWall = collision.gameObject.GetComponent<Ramp>().GetAdjacentWall(currentWall);
             gravityDirection = currentWall.GravityDirection;
             constant.force = gravityDirection;
             canChangeWalls = false;
 
-            StartCoroutine(StartWallChangeTimer());
+            float signedAngle = Vector3.SignedAngle(transform.up, currentWall.GravityDirection.normalized * -1, Vector3.forward);
 
-            /*if (movingDirection == "Left")
+            if (signedAngle != 0)
             {
-                GetLeftMovementDirection();
+                Quaternion rot = Quaternion.AngleAxis(signedAngle, Vector3.forward) * transform.rotation;
+                transform.rotation = rot;
             }
-            else
-            {
-                GetRightMovementDirection();
-            }*/
+
+            StartCoroutine(StartWallChangeTimer());
         }
     }
 

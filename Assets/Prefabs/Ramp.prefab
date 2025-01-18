@@ -66,7 +66,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 3f7283b375933e948a879032aa8bf966, type: 3}
       propertyPath: m_Name
-      value: wall-corner-round
+      value: Ramp
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 3f7283b375933e948a879032aa8bf966, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

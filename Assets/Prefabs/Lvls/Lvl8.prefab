@@ -146,7 +146,7 @@ Transform:
   m_GameObject: {fileID: 695551838519683654}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -15.67, y: 1.35, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -878,7 +878,7 @@ Transform:
   m_GameObject: {fileID: 7460584471522181985}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 19.17, y: 1.35, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1700,6 +1700,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f504606f44cdb394b8d77b4f772359be, type: 3}
+--- !u!114 &4543801484409243727 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3631440292989753677, guid: f504606f44cdb394b8d77b4f772359be, type: 3}
+  m_PrefabInstance: {fileID: 967047777834684674}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ea2f8988463ca14a83f38cf2068399e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!64 &5862977305490003310 stripped
 MeshCollider:
   m_CorrespondingSourceObject: {fileID: 6644742526253286508, guid: f504606f44cdb394b8d77b4f772359be, type: 3}
@@ -2014,6 +2025,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1863715566041253762}
     m_Modifications:
+    - target: {fileID: 4297554403819305125, guid: d0b619cb35baea9408cb0488b2598006, type: 3}
+      propertyPath: '_adjacentWalls.Array.data[0]'
+      value: 
+      objectReference: {fileID: 5775326721822180479}
+    - target: {fileID: 4297554403819305125, guid: d0b619cb35baea9408cb0488b2598006, type: 3}
+      propertyPath: '_adjacentWalls.Array.data[1]'
+      value: 
+      objectReference: {fileID: 8245205602143862841}
     - target: {fileID: 6322427990927092651, guid: d0b619cb35baea9408cb0488b2598006, type: 3}
       propertyPath: m_Name
       value: Ramp (4)
@@ -3082,6 +3101,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1863715566041253762}
     m_Modifications:
+    - target: {fileID: 4297554403819305125, guid: d0b619cb35baea9408cb0488b2598006, type: 3}
+      propertyPath: '_adjacentWalls.Array.data[0]'
+      value: 
+      objectReference: {fileID: 3474553444901057663}
+    - target: {fileID: 4297554403819305125, guid: d0b619cb35baea9408cb0488b2598006, type: 3}
+      propertyPath: '_adjacentWalls.Array.data[1]'
+      value: 
+      objectReference: {fileID: 4543801484409243727}
     - target: {fileID: 6322427990927092651, guid: d0b619cb35baea9408cb0488b2598006, type: 3}
       propertyPath: m_Name
       value: Ramp (3)
@@ -4633,6 +4660,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1863715566041253762}
     m_Modifications:
+    - target: {fileID: 4297554403819305125, guid: d0b619cb35baea9408cb0488b2598006, type: 3}
+      propertyPath: '_adjacentWalls.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1897769011413096336}
+    - target: {fileID: 4297554403819305125, guid: d0b619cb35baea9408cb0488b2598006, type: 3}
+      propertyPath: '_adjacentWalls.Array.data[1]'
+      value: 
+      objectReference: {fileID: 1639447146877959964}
     - target: {fileID: 6322427990927092651, guid: d0b619cb35baea9408cb0488b2598006, type: 3}
       propertyPath: m_Name
       value: Ramp
@@ -6422,6 +6457,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1863715566041253762}
     m_Modifications:
+    - target: {fileID: 4297554403819305125, guid: d0b619cb35baea9408cb0488b2598006, type: 3}
+      propertyPath: '_adjacentWalls.Array.data[0]'
+      value: 
+      objectReference: {fileID: 5775326721822180479}
+    - target: {fileID: 4297554403819305125, guid: d0b619cb35baea9408cb0488b2598006, type: 3}
+      propertyPath: '_adjacentWalls.Array.data[1]'
+      value: 
+      objectReference: {fileID: 3445308799645729554}
     - target: {fileID: 6322427990927092651, guid: d0b619cb35baea9408cb0488b2598006, type: 3}
       propertyPath: m_Name
       value: Ramp (6)
@@ -6484,6 +6527,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1863715566041253762}
     m_Modifications:
+    - target: {fileID: 4297554403819305125, guid: d0b619cb35baea9408cb0488b2598006, type: 3}
+      propertyPath: '_adjacentWalls.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1639447146877959964}
+    - target: {fileID: 4297554403819305125, guid: d0b619cb35baea9408cb0488b2598006, type: 3}
+      propertyPath: '_adjacentWalls.Array.data[1]'
+      value: 
+      objectReference: {fileID: 6571046754446471897}
     - target: {fileID: 6322427990927092651, guid: d0b619cb35baea9408cb0488b2598006, type: 3}
       propertyPath: m_Name
       value: Ramp (2)
@@ -7308,6 +7359,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1863715566041253762}
     m_Modifications:
+    - target: {fileID: 4297554403819305125, guid: d0b619cb35baea9408cb0488b2598006, type: 3}
+      propertyPath: '_adjacentWalls.Array.data[0]'
+      value: 
+      objectReference: {fileID: 3474553444901057663}
+    - target: {fileID: 4297554403819305125, guid: d0b619cb35baea9408cb0488b2598006, type: 3}
+      propertyPath: '_adjacentWalls.Array.data[1]'
+      value: 
+      objectReference: {fileID: 7055701112137600192}
     - target: {fileID: 6322427990927092651, guid: d0b619cb35baea9408cb0488b2598006, type: 3}
       propertyPath: m_Name
       value: Ramp (5)
@@ -7764,6 +7823,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1863715566041253762}
     m_Modifications:
+    - target: {fileID: 4297554403819305125, guid: d0b619cb35baea9408cb0488b2598006, type: 3}
+      propertyPath: '_adjacentWalls.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1639447146877959964}
+    - target: {fileID: 4297554403819305125, guid: d0b619cb35baea9408cb0488b2598006, type: 3}
+      propertyPath: '_adjacentWalls.Array.data[1]'
+      value: 
+      objectReference: {fileID: 5565354420239127924}
     - target: {fileID: 6322427990927092651, guid: d0b619cb35baea9408cb0488b2598006, type: 3}
       propertyPath: m_Name
       value: Ramp (1)
