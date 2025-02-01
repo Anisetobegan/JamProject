@@ -3,35 +3,29 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Player : MonoBehaviour
 {
     float _moveSpeed = 6f;
     float _jumpForce = 10f;
-    float _minimumJumpForce = 3f;
     bool _isJumping = false;
     bool _isVertical = false;
+    float _moveDirection;
 
     //Vectors
     Vector3 _gravityDirection;
+    Vector3 _direction;
 
     //Assets
     [SerializeField] Rigidbody _rb;
     [SerializeField] ConstantForce _constant;
     [SerializeField] Wall _currentWall;
+    [SerializeField] LayerMask _enemyLayerMask;
 
     [SerializeField] Animator animator;
 
     [SerializeField] GameObject _deadVFX;
-
-    enum Direction
-    {
-        Left,
-        Right,
-        Up,
-        Down
-    }
-    Direction _direction;
 
     enum State
     {
@@ -48,16 +42,22 @@ public class Player : MonoBehaviour
         transform.rotation = LevelManager.Instance.CurrentLevel.PlayerStartingPosition.rotation;
         _gravityDirection = _currentWall.GravityDirection;
         _constant.force = _gravityDirection;
-        _direction = Direction.Right;
-        _state = State.Running;        
+        _direction = transform.forward;
+        _state = State.Running;
+        _moveDirection = transform.rotation.eulerAngles.y;
+
+        if (_currentWall.direction == Wall.Direction.Up || _currentWall.direction == Wall.Direction.Down)
+        {
+            _isVertical = false;
+        }
+        else
+        {
+            _isVertical = true;
+        }
     }
 
     void Update()
     {
-        /*if (Input.GetKeyDown(KeyCode.A) && !_isVertical)
-        {
-            _direction = Direction.Left;
-        }*/
         if (Input.GetKeyDown(KeyCode.A))
         {
             if (_isVertical) 
@@ -69,7 +69,10 @@ public class Player : MonoBehaviour
             }
             else
             {
-                _direction = Direction.Left;
+                if (_direction != Vector3.left)
+                {
+                    ChangeDirection();
+                }
             }            
         }
         if (Input.GetKeyDown(KeyCode.D))
@@ -83,7 +86,10 @@ public class Player : MonoBehaviour
             }
             else
             {
-                _direction = Direction.Right;
+                if (_direction != Vector3.right)
+                {
+                    ChangeDirection();
+                }
             }
         }
         if (Input.GetKeyDown(KeyCode.W))
@@ -97,7 +103,10 @@ public class Player : MonoBehaviour
             }
             else
             {
-                _direction = Direction.Up;
+                if (_direction != Vector3.up)
+                {
+                    ChangeDirection();
+                }
             }
         }
         if (Input.GetKeyDown(KeyCode.S))
@@ -111,7 +120,10 @@ public class Player : MonoBehaviour
             }
             else
             {
-                _direction = Direction.Down;
+                if (_direction != Vector3.down)
+                {
+                    ChangeDirection();
+                }
             }
         }
         if (Input.GetKeyDown(KeyCode.Space))
@@ -124,6 +136,11 @@ public class Player : MonoBehaviour
             case State.Running:
 
                 Move();
+
+                if (_isJumping)
+                {
+                    _state = State.Jumping;
+                }
 
                 break;
 
@@ -142,7 +159,7 @@ public class Player : MonoBehaviour
 
                 if (GameManager.Instance.EnumeratorGet == null)
                 {
-                    _rb.isKinematic = false;
+                    //_rb.isKinematic = false;
                     _state = State.Running;
                 }
                 break;
@@ -161,60 +178,20 @@ public class Player : MonoBehaviour
 
     void Move()
     {
-        switch( _direction)
-        {
-            case Direction.Right:
-                MoveRight();
-                break;
-
-            case Direction.Left:
-                MoveLeft();
-                break;
-            case Direction.Up:
-                MoveUp();
-                break;
-            case Direction.Down:
-                MoveDown();
-                break;
-        }
-
-    }    
-
-    void MoveRight()
-    {
-        Vector3 moveDirection = Vector3.right;
-        _rb.position = (moveDirection * _moveSpeed) * Time.deltaTime + _rb.position;
-        transform.rotation = _currentWall.transform.rotation;
-        transform.rotation = Quaternion.LookRotation(moveDirection, _gravityDirection * -1);
-    }
-    void MoveLeft()
-    {
-        Vector3 moveDirection = Vector3.left;        
-        _rb.position = (moveDirection * _moveSpeed) * Time.deltaTime + _rb.position;
-        transform.rotation = _currentWall.transform.rotation;
-        transform.rotation = Quaternion.LookRotation(moveDirection, _gravityDirection * -1);
-    }
-
-    void MoveUp()
-    {
-        Vector3 moveDirection = Vector3.up;
-        _rb.position = (moveDirection * _moveSpeed) * Time.deltaTime + _rb.position;
-        transform.rotation = _currentWall.transform.rotation;
-        transform.rotation = Quaternion.LookRotation(moveDirection, _gravityDirection * -1);
-    }
-
-    void MoveDown()
-    {
-        Vector3 moveDirection = Vector3.down;
-        _rb.position = (moveDirection * _moveSpeed) * Time.deltaTime + _rb.position;
-        transform.rotation = _currentWall.transform.rotation;
-        transform.rotation = Quaternion.LookRotation(moveDirection, _gravityDirection * -1);
+        _rb.position = (transform.forward * _moveSpeed) * Time.deltaTime + _rb.position;
     }
 
     void Jump()
     {
         _rb.AddForce((_gravityDirection * -1).normalized * _jumpForce, ForceMode.Impulse);
         _isJumping = true;
+    }
+
+    void ChangeDirection()
+    {
+        _moveDirection *= -1;
+        transform.Rotate(0, _moveDirection * 2, 0, Space.Self);
+        _direction = transform.forward;
     }
 
     bool CalculateDotProduct(GameObject target)
@@ -263,9 +240,9 @@ public class Player : MonoBehaviour
         _rb.linearVelocity = Vector3.zero;
         _rb.linearVelocity = Vector3.zero;
         _rb.angularVelocity = Vector3.zero;
-        _rb.isKinematic = true;
-        transform.DOMove(startingPos.position, 3f).SetEase(Ease.InOutSine).OnComplete(() => levelToDestroy.DestroyCompletedLevel());
-        transform.DORotate(startingPos.rotation.eulerAngles, 3f);
+        //_rb.isKinematic = true;
+        transform.DOMove(startingPos.position, GameManager.Instance.TransitionTime).SetEase(Ease.InOutSine).OnComplete(() => levelToDestroy.DestroyCompletedLevel());
+        transform.DORotate(startingPos.rotation.eulerAngles, 3f).OnComplete(() => _direction = transform.forward);
     }
 
     void PlayDeadVFX()
@@ -281,8 +258,9 @@ public class Player : MonoBehaviour
             {
                 _rb.Sleep();
 
+                Vector3 lastForwardDirection = transform.forward;
+
                 ContactPoint contactPoint = collision.GetContact(0);
-                transform.position = contactPoint.point;
 
                 Wall lastWall = _currentWall;
                 _currentWall = collision.gameObject.GetComponent<Wall>();
@@ -290,83 +268,30 @@ public class Player : MonoBehaviour
                 _isJumping = false;
                 _state = State.Running;
                 _constant.force = _gravityDirection;
+                _isVertical = _currentWall.direction == Wall.Direction.Left || _currentWall.direction == Wall.Direction.Right;
 
-                //switch to mantain the direction the Player is moving when changing walls
-                switch (_currentWall.direction) 
+                float signedAngle = Vector3.SignedAngle(transform.up, _currentWall.GravityDirection.normalized * -1, Vector3.forward);
+
+                if (signedAngle != 0)
                 {
-                    case Wall.Direction.Up:
-                        if (lastWall.direction == Wall.Direction.Left)
-                        {
-                            _isVertical = false;
-                            _direction = Direction.Right;
-                        }
-                        else if (lastWall.direction == Wall.Direction.Right)
-                        {
-                            _isVertical = false;
-                            _direction = Direction.Left;
-                        }
-                        break;
+                    Quaternion rot = Quaternion.AngleAxis(signedAngle, Vector3.forward) * transform.rotation;
+                    transform.rotation = rot;
+                    _direction = transform.forward;
 
-                    case Wall.Direction.Down:
-                        if (lastWall.direction == Wall.Direction.Left)
-                        {
-                            _isVertical = false;
-                            _direction = Direction.Right;
-                        }
-                        else if (lastWall.direction == Wall.Direction.Right)
-                        {
-                            _isVertical = false;
-                            _direction = Direction.Left;
-                        }
-                        break;
+                    float dot = Vector3.Dot(lastForwardDirection, transform.forward);
 
-                    case Wall.Direction.Left:
-                        if (lastWall.direction == Wall.Direction.Up)
-                        {
-                            _isVertical = true;
-                            _direction = Direction.Down;
-                        }
-                        else if (lastWall.direction == Wall.Direction.Down)
-                        {
-                            _isVertical = true;
-                            _direction = Direction.Up;
-                        }
-                        break;
-
-                    case Wall.Direction.Right:
-                        if (lastWall.direction == Wall.Direction.Up)
-                        {
-                            _isVertical = true;
-                            _direction = Direction.Down;
-                        }
-                        else if (lastWall.direction == Wall.Direction.Down)
-                        {
-                            _isVertical = true;
-                            _direction = Direction.Up;
-                        }
-                        break;
+                    if (dot <= -0.999f)
+                    {
+                        ChangeDirection();
+                    }
+                    transform.position = contactPoint.point;
                 }
             }
             else
             {
                 if (collision.gameObject.GetComponent<Wall>() != _currentWall)
                 {
-                    //inverts the direction when the Player collides with a wall
-                    switch (_direction)
-                    {
-                        case Direction.Left:
-                            _direction = Direction.Right;
-                            break;
-                        case Direction.Up:
-                            _direction = Direction.Down;
-                            break;
-                        case Direction.Down:
-                            _direction = Direction.Up;
-                            break;
-                        case Direction.Right:
-                            _direction = Direction.Left;
-                            break;
-                    }
+                    ChangeDirection();
                 }
             }
         }
@@ -374,7 +299,8 @@ public class Player : MonoBehaviour
         else if(collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
             //checks if the Enemy is below the Player
-            if (CalculateDotProduct(collision.gameObject))
+            //if (CalculateDotProduct(collision.gameObject))
+            if (CheckIfEnemyIsBelow(collision.gameObject))
             {
                 //if true, kills the Enemy
                 _rb.Sleep();
@@ -389,5 +315,29 @@ public class Player : MonoBehaviour
                 _state = State.Dead;
             }
         }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Wall"))
+        {
+            if (collision.gameObject.GetComponent<Wall>() == _currentWall)
+            {
+                _isJumping = true;
+            }
+        }
+    }
+
+    bool CheckIfEnemyIsBelow(GameObject enemy)
+    {
+        Ray ray = new Ray(transform.position, transform.up * -1);
+        RaycastHit hit;
+
+        return Physics.Raycast(ray, out hit, 100f, _enemyLayerMask);
+    }
+
+    public void MakeRigidBodyKinematic()
+    {
+        _rb.isKinematic = _rb.isKinematic == false;
     }
 }

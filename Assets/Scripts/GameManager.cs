@@ -5,15 +5,22 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    private int _level;
+    private static int _level = 1;
 
     IEnumerator _enumerator = null;
 
     public static bool _isPaused = false;
 
+    public float TransitionTime = 3f;
+    public bool IsStartOfGame = true;
+
     [SerializeField] Player _player;
+    [SerializeField] CameraFollow _cam;
+
+    public int Level {  get { return _level; } }
 
     public Player PlayerGet { get { return _player; } }
+    public CameraFollow CameraGet { get { return _cam; } }
 
     public IEnumerator EnumeratorGet { get { return _enumerator; } }
 
@@ -37,8 +44,6 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        _level = 1;
-
         UIManager.Instance.OpenLevelStartScreen(_level);
     }
 
@@ -57,15 +62,25 @@ public class GameManager : MonoBehaviour
     public void LevelWon()
     {
         _level += 1;
-        
-        LevelManager.Instance.EndLevel();
-        UIManager.Instance.OpenLevelClearScreen();
-        LevelManager.Instance.ChangeLevel(_level);
+        IsStartOfGame = false;
+        _player.MakeRigidBodyKinematic();
 
-        if (LevelManager.Instance.CurrentLevel != null)
+        if (_level <= LevelManager.Instance.LevelCount)
         {
-            _enumerator = StartNewLevel();
-            StartCoroutine(_enumerator);
+
+            LevelManager.Instance.EndLevel();
+            UIManager.Instance.OpenLevelClearScreen();
+            LevelManager.Instance.ChangeLevel(_level);
+
+            if (LevelManager.Instance.CurrentLevel != null)
+            {
+                _enumerator = StartNewLevel();
+                StartCoroutine(_enumerator);
+            }
+        }
+        else
+        {
+            GameWon();
         }
     }
 
@@ -76,7 +91,7 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator StartNewLevel()
     {
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(TransitionTime);
 
         UIManager.Instance.OpenLevelStartScreen(_level);
 
@@ -107,6 +122,7 @@ public class GameManager : MonoBehaviour
 
     public void ReturnToMainMenu()
     {
+        _level = 1;
         SceneManager.LoadScene(0);
         Time.timeScale = 1;
     }

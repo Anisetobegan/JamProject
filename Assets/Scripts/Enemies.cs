@@ -56,4 +56,19 @@ public class Enemies : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    protected Wall CheckContactsForCurrentWall(ContactPoint[] contacts)
+    {
+        Wall contactWall = null;
+
+        foreach (ContactPoint contact in contacts)
+        {
+            if (contact.otherCollider.gameObject.GetComponent<Wall>() != currentWall)
+            {
+                contactWall = contact.otherCollider.gameObject.GetComponent<Wall>();
+                return contactWall;
+            }
+        }
+        return currentWall;
+    }
 }

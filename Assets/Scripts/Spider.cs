@@ -8,6 +8,7 @@ public class Spider : Enemies
     [SerializeField] float jumpForce = 9f;
     [SerializeField] bool isJumping = false;
     float timebetweenJumps = 0.5f;
+    float timer = 0f;
 
     enum State
     {
@@ -27,15 +28,25 @@ public class Spider : Enemies
 
     protected override void Update()
     {
+        if (!isJumping)
+        {
+            timer += Time.deltaTime;
+        }
+        else
+        {
+            timer = 0;
+        }
+
         switch (state)
         {
             case State.Walking:
 
                 Move();
                 
-                if (enumerator == null)
+                if (timer >= timebetweenJumps)
                 {
-                    PrepareJump();
+                    timer = 0;
+                    Jump();
                 }
 
                 break;
@@ -56,25 +67,12 @@ public class Spider : Enemies
                 break;
         }
     }
-
-    void PrepareJump()
-    {
-        enumerator = JumpTimer();
-        StartCoroutine(enumerator);
-    }
-
-    IEnumerator JumpTimer()
-    {
-        yield return new WaitForSeconds(timebetweenJumps);
-        Jump();
-        enumerator = null;
-    }
     
     void Jump()
     {
         rb.AddForce((gravityDirection * -1).normalized * jumpForce, ForceMode.Impulse);
         state = State.Jumping;
-        isJumping = true;
+        //isJumping = true;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -89,8 +87,6 @@ public class Spider : Enemies
 
                 Vector3 newPos = collision.GetContact(0).point;
                 newPos.z = 0;
-
-                float currentYRotation = transform.rotation.eulerAngles.y;
 
                 currentWall = CheckContactsForCurrentWall(collision.contacts);
                 gravityDirection = currentWall.GravityDirection;
@@ -121,48 +117,27 @@ public class Spider : Enemies
                 }
             }
         }
-
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Ramp") && canChangeWalls)
-        {
-            rb.Sleep();
-
-            Vector3 lastForwardDirection = transform.forward;
-
-            currentWall = collision.gameObject.GetComponent<Ramp>().GetAdjacentWall(currentWall);
-            gravityDirection = currentWall.GravityDirection;
-            constant.force = gravityDirection;
-            canChangeWalls = false;
-
-            float signedAngle = Vector3.SignedAngle(transform.up, currentWall.GravityDirection.normalized * -1, Vector3.forward);
-
-            if (signedAngle != 0)
-            {
-                Quaternion rot = Quaternion.AngleAxis(signedAngle, Vector3.forward) * transform.rotation;
-                transform.rotation = rot;
-            }
-
-            StartCoroutine(StartWallChangeTimer());
-        }
     }
 
-    IEnumerator StartWallChangeTimer()
+    private void OnCollisionStay(Collision collision)
     {
-        yield return new WaitForSeconds(2f);
-        canChangeWalls = true;
-    }
-
-    Wall CheckContactsForCurrentWall(ContactPoint[] contacts)
-    {
-        Wall contactWall = null;
-
-        foreach (ContactPoint contact in contacts)
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Wall"))
         {
-            if (contact.otherCollider.gameObject.GetComponent<Wall>() != currentWall)
+            if (collision.gameObject.GetComponent<Wall>() != currentWall)
             {
-                contactWall = contact.otherCollider.gameObject.GetComponent<Wall>();
-                return contactWall;
+                ChangeDirection();
             }
         }
-        return currentWall;
     }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Wall"))
+        {
+            if (collision.gameObject.GetComponent<Wall>() == currentWall)
+            {
+                isJumping = true;
+            }
+        }
+    }    
 }

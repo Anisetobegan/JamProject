@@ -4,7 +4,7 @@ using System.Collections;
 
 public class Bat : Enemies
 {
-    [SerializeField] Collider trigger;
+    [SerializeField] SphereCollider trigger;
 
     enum State
     {
@@ -16,6 +16,7 @@ public class Bat : Enemies
     protected override void Start()
     {
         gravityDirection = currentWall.GravityDirection;
+        moveDirection = transform.rotation.eulerAngles.y;
     }
 
     private void Awake()
@@ -40,6 +41,16 @@ public class Bat : Enemies
         }
     }
 
+    void MantainWallDistance(Vector3 contactPoint)
+    {
+        float currentDistance = Vector3.Distance(transform.position, contactPoint);
+        if (currentDistance < trigger.radius)
+        {
+            float distanceToMove = (trigger.radius - currentDistance) + transform.localPosition.y;
+            transform.DOLocalMoveY(distanceToMove, 0.2f).SetEase(Ease.Linear);
+        }
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Wall"))
@@ -57,7 +68,7 @@ public class Bat : Enemies
         {
             if (other.gameObject.GetComponent<Wall>() != currentWall && canChangeWalls)
             {
-                rb.Sleep();
+                canChangeWalls = false;
 
                 Vector3 lastForwardDirection = transform.forward;
 
@@ -65,27 +76,31 @@ public class Bat : Enemies
                 gravityDirection = currentWall.GravityDirection;
 
                 float signedAngle = Vector3.SignedAngle(transform.up, currentWall.GravityDirection.normalized * -1, Vector3.forward);
+                                
+                Quaternion rot = Quaternion.AngleAxis(signedAngle, Vector3.forward) * transform.rotation;
+                //transform.rotation = rot;
+                transform.DORotateQuaternion(rot, 0.2f).SetEase(Ease.Linear).OnComplete(() => canChangeWalls = true);
 
-                if (signedAngle != 0)
+                float dot = Vector3.Dot(lastForwardDirection, transform.forward);
+
+                if (dot <= -0.999f)
                 {
-                    Quaternion rot = Quaternion.AngleAxis(signedAngle, Vector3.forward) * transform.rotation;
-                    transform.rotation = rot;
-
-                    float dot = Vector3.Dot(lastForwardDirection, transform.forward);
-
-                    if (dot <= -0.999f)
-                    {
-                        ChangeDirection();
-                    }
+                    ChangeDirection();
                 }
-                StartCoroutine(StartWallChangeTimer());
+                
+                MantainWallDistance(other.ClosestPointOnBounds(transform.position));
             }            
         }
     }
 
-    IEnumerator StartWallChangeTimer()
+    private void OnCollisionStay(Collision collision)
     {
-        yield return new WaitForSeconds(1f);
-        canChangeWalls = true;
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Wall"))
+        {
+            if (collision.gameObject.GetComponent<Wall>() != currentWall)
+            {
+                ChangeDirection();
+            }
+        }
     }
 }

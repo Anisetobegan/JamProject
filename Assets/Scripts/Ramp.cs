@@ -5,6 +5,9 @@ using System.Collections.Generic;
 public class Ramp : MonoBehaviour
 {
     [SerializeField] List<Wall> _adjacentWalls;
+    [SerializeField] float _rotateTime = 0.8f;
+
+    public float RotateTime { get { return _rotateTime; } }
 
     void Start()
     {
@@ -18,21 +21,16 @@ public class Ramp : MonoBehaviour
 
     public Wall GetAdjacentWall(Wall wall)
     {
-        Wall currentWall = new Wall();
-        Wall adjacentWall = new Wall();
-
-        for (int i = 0; i < _adjacentWalls.Count; i++)
+        Wall adjacentWall = null;
+        
+        if (_adjacentWalls[0] == wall)
         {
-            if (_adjacentWalls[i] == wall)
-            {
-                currentWall = _adjacentWalls[i];
-            }
-            else
-            {
-                adjacentWall = _adjacentWalls[i];
-            }
+            adjacentWall = _adjacentWalls[1];
         }
-
+        else
+        {
+            adjacentWall = _adjacentWalls[0];
+        }
         return adjacentWall;
     }
 }

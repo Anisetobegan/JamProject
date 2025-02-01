@@ -8,14 +8,17 @@ public class Level : MonoBehaviour
     [SerializeField] int levelNumber;
     [SerializeField] List<Enemies> enemiesAlive;
     [SerializeField] List<Wall> walls;
+    [SerializeField] Wall startingWall;
     [SerializeField] Transform playerStartingPos;
     [SerializeField] Transform startChain;
     [SerializeField] Transform endChain;
+    [SerializeField] Transform cameraPos;
 
-    public Wall StartingWall { get { return walls[0]; } }
+    public Wall StartingWall { get { return startingWall; } }
     public Transform PlayerStartingPosition { get { return playerStartingPos; } }
     public Transform StartChain { get { return startChain; } }
     public Transform EndChain { get { return endChain; } }
+    public Transform CameraPosition { get { return cameraPos; } }
 
     private void OnEnable()
     {

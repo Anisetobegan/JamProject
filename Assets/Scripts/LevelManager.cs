@@ -4,8 +4,10 @@ using System.Collections.Generic;
 public class LevelManager : MonoBehaviour
 {
     [SerializeField] List<Level> levels;
-    Level currentLevel = new Level();
-    Level nextLevel = new Level();
+    Level currentLevel;
+    Level nextLevel;
+
+    public int LevelCount { get { return levels.Count; } }
 
     public static LevelManager Instance
     {
@@ -29,9 +31,11 @@ public class LevelManager : MonoBehaviour
 
     void Start()
     {
-        currentLevel = InstantiateLevel(1);
-        nextLevel = InstantiateNextLevel(2);
+        int level = GameManager.Instance.Level;
+        currentLevel = InstantiateLevel(level);
+        nextLevel = InstantiateNextLevel(level + 1);
         GameManager.Instance.PlayerGet.AssignCurrentWall(currentLevel.StartingWall);
+        GameManager.Instance.CameraGet.SetCameraBehaviour(currentLevel.CameraPosition, currentLevel.PlayerStartingPosition.position);
     }
 
     void Update()
@@ -43,6 +47,7 @@ public class LevelManager : MonoBehaviour
     {
         currentLevel.EnableWallsColliders();
         currentLevel.EnableEnemies();
+        GameManager.Instance.PlayerGet.MakeRigidBodyKinematic();
     }
 
     public void EndLevel()
@@ -56,21 +61,24 @@ public class LevelManager : MonoBehaviour
         currentLevel = nextLevel;
         nextLevel = InstantiateNextLevel(level + 1);
 
-        if (nextLevel != null)
+        /*if (nextLevel != null)
         {
             GameManager.Instance.PlayerGet.PlayerTransition(currentLevel.PlayerStartingPosition, completedLevel);
             GameManager.Instance.PlayerGet.AssignCurrentWall(currentLevel.StartingWall);
+            GameManager.Instance.CameraGet.SetCameraBehaviour(currentLevel.CameraPosition, currentLevel.PlayerStartingPosition.position);
         }
         else if (currentLevel != null)
         {
             GameManager.Instance.PlayerGet.PlayerTransition(currentLevel.PlayerStartingPosition, completedLevel);
             GameManager.Instance.PlayerGet.AssignCurrentWall(currentLevel.StartingWall);
-        }
-        else
+            GameManager.Instance.CameraGet.SetCameraBehaviour(currentLevel.CameraPosition, currentLevel.PlayerStartingPosition.position);
+        }*/
+        if (currentLevel != null)
         {
-            GameManager.Instance.GameWon();
+            GameManager.Instance.PlayerGet.PlayerTransition(currentLevel.PlayerStartingPosition, completedLevel);
+            GameManager.Instance.PlayerGet.AssignCurrentWall(currentLevel.StartingWall);
+            GameManager.Instance.CameraGet.SetCameraBehaviour(currentLevel.CameraPosition, currentLevel.PlayerStartingPosition.position);
         }
-
     }
 
     public Level InstantiateLevel(int level)

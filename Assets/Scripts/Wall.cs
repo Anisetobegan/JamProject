@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class Wall : MonoBehaviour
 {
     [SerializeField] Vector3 gravityDirection;
-    [SerializeField] Collider wallCollider;
+    Collider wallCollider;
 
     public enum Direction
     {
@@ -21,8 +21,8 @@ public class Wall : MonoBehaviour
 
     public Collider WallCollider { get { return wallCollider; } }
 
-    void Start()
+    void Awake()
     {
-        
+        wallCollider = GetComponent<Collider>();
     }
 }
