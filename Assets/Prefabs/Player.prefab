@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 4996029147636981433}
   - component: {fileID: 5421466480783368045}
   - component: {fileID: 1158264560748205090}
+  - component: {fileID: 1174383042412307256}
   m_Layer: 8
   m_Name: Player
   m_TagString: Untagged
@@ -219,11 +220,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0fd62acffbae324dba40358972fa670, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _jumpForce: 6
-  _minimumJumpForce: 2
   _rb: {fileID: 5076886873066754329}
   _constant: {fileID: 1158264560748205090}
   _currentWall: {fileID: 0}
+  _enemyLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
   animator: {fileID: 225734372703026538}
   _deadVFX: {fileID: 1596289443257288135, guid: 4621528744b92d1478467d331c0c2326, type: 3}
   _state: 0
@@ -239,6 +241,27 @@ ConstantForce:
   m_RelativeForce: {x: 0, y: 0, z: 0}
   m_Torque: {x: 0, y: 0, z: 0}
   m_RelativeTorque: {x: 0, y: 0, z: 0}
+--- !u!65 &1174383042412307256
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7710549229241563046}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.5610271, y: 0.51585305, z: 0.5610271}
+  m_Center: {x: 0, y: -0.26400554, z: 0}
 --- !u!1001 &2325514377309799756
 PrefabInstance:
   m_ObjectHideFlags: 0

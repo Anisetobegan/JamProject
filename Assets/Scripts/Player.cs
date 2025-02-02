@@ -12,6 +12,7 @@ public class Player : MonoBehaviour
     bool _isJumping = false;
     bool _isVertical = false;
     float _moveDirection;
+    bool _canKillEnemy = false;
 
     //Vectors
     Vector3 _gravityDirection;
@@ -295,18 +296,19 @@ public class Player : MonoBehaviour
                 }
             }
         }
-
         else if(collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
             //checks if the Enemy is below the Player
             //if (CalculateDotProduct(collision.gameObject))
-            if (CheckIfEnemyIsBelow(collision.gameObject))
+            //if (CheckIfEnemyIsBelow(collision.gameObject))
+            if (_canKillEnemy)
             {
                 //if true, kills the Enemy
                 _rb.Sleep();
                 collision.gameObject.GetComponent<Enemies>().Die();
                 Jump();
                 Debug.Log("enemy killed");
+                _canKillEnemy = false;
             }  
             else
             {
@@ -325,6 +327,22 @@ public class Player : MonoBehaviour
             {
                 _isJumping = true;
             }
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        {
+            _canKillEnemy = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        {
+            _canKillEnemy = false;
         }
     }
 
